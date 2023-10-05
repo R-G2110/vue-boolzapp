@@ -1,27 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<!-- CDN Vue -->
-	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
 
-	<!-- CDN Font Awesome -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Luxon  -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/luxon/3.3.0/luxon.min.js' integrity='sha512-KKbQg5o92MwtJKR9sfm/HkREzfyzNMiKPIQ7i7SZOxwEdiNCm4Svayn2DBq7MKEdrqPJUOSIpy1v6PpFlCQ0YA==' crossorigin='anonymous'></script>
 
-	<!-- CDN Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!-- VueJs -->
+    <script src="https://unpkg.com/vue@3"></script>
 
-	<!-- Custom CSS -->
-	<link rel="stylesheet" href="css/style.css">
-
+    <title>Boolzapp</title>
 </head>
+
 <body>
-	<div id="app" class="main-wrapper">
-		
-	</div>
-	<script src="js/script.js"></script>
+<div id="app" class="container">
+    <!-- contenitore sx -->
+    <div class="left">
+        <div class="header-left">
+            <div class="header-left-logo">
+                <img src="img/avatar_1.jpg"  alt="Ugo de Ughi" >
+                <span>Ugo de Ughi</span>
+            </div>
+            <div class="header-left-icons">
+                <i class="fas fa-circle-notch"></i>
+                <i class="fas fa-comment-alt"></i>
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+        </div>
+        <div class="left-disclaimer">
+            <div class="left-disclaimer-logo">
+                <i class="fa fa-bell-slash" aria-hidden="true"></i>
+            </div>
+            <div class="left-disclaimer-text">
+                <h3>Ricevi notifiche di nuovi messaggi</h3>
+                <a href="#">Attiva notifiche desktop</a>
+            </div>
+        </div>
+        <div class="left-searchbar">
+            <label class="search-label" for="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </label>
+            <input
+              id="contacts-filter"
+              v-model.trim="searchString"
+              @keyup="resultQuery"
+              class="left-searchbar-input"
+              placeholder="Cerca o inizia una nuova chat"
+            >
+        </div>
+
+        <!-- contacts -->
+        <div class="contacts">
+            
+            <div 
+                v-if="(searchString.length > 0)" 
+                :class="{'active': contact === activeContact}"
+                @click="activeContact = contact"
+                class="contact"
+            >
+                <div class="contact-logo">
+                    <img :src="`${contactFound.avatar}`" :alt="contactFound.name">
+                </div>
+                <div class="contact-info">
+                    <h3>
+                        <span class="contact-name">{{contactFound.name}}</span>
+                        <span class="time f-right"></span>
+                    </h3>
+                    <small></small>
+                
+                </div>
+            </div>
+            <!-- contatto  -->
+           <div 
+                v-else
+                v-for="contact in contacts" 
+                :class="{'active': contact === activeContact}"
+                @click="activeContact = contact"
+                class="contact"
+            >
+                <div class="contact-logo">
+                    <img :src="`${contact.avatar}`" :alt="contact.name">
+                </div>
+                <div class="contact-info">
+                    <h3>
+                        <span class="contact-name">{{contact.name}}</span>
+                        <span class="time f-right">{{getLastDate(contact)}}</span>
+                    </h3>
+                    <small>{{getLastMessage(contact)}}</small>
+                    
+                </div>
+            </div>
+            <!-- /contatto  -->
+
+        </div>
+        <!-- /contacts -->
+    </div>
+    <!-- /contenitore sx -->
+
+    <!-- contenitore dx -->
+    <div class="right">
+        <div class="header-right">
+            <div class="header-right-logo">
+                <img :src="activeContact.avatar" :alt="activeContact.name">
+                <h3><span id="header-right-contact-name">{{activeContact.name}}</span> <br>
+                  <small class="time">Ultimo messaggio:  {{getLastDate(activeContact)}}</small></h3>
+            </div>
+            <div class="header-right-icons">
+                <i class="fas fa-search"></i>
+                <i class="fas fa-paperclip"></i>
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+        </div>
+        <div class="right-messages-container">
+
+            <!-- contenitore messaggi -->
+            <div class="right-messages">
+            
+                <div 
+                    v-for="(message, index) in activeContact.messages"
+                    class="message"
+                    :class="message.status"
+                >
+                    <div class="dropdown">
+                        <span 
+                         type="button" 
+                         data-bs-toggle="dropdown"
+                         class="dropdown-panel"
+                        >
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">Action</li>
+                            <li 
+                                class="dropdown-item"
+                                @click="removeMessage(index)"
+                            >Cancella Messaggio</li>
+                        </ul>
+                    </div>
+                    <div class="message-text">{{message.message}}</div>
+                    <div class="message-time">{{message.date}}</div>
+                </div>
+                
+            </div>
+            <!-- //contenitore messaggi -->
+
+        <div class="right-footer">
+            <div class="right-footer-icon f-left">
+                <i class="far fa-smile"></i>
+            </div>
+            <input 
+                v-model.trim="newMessageString"
+                @keyup.enter="sendNewMessage"
+                class="new-message-inputs"  
+                placeholder="Scrivi un messaggio"
+            >
+            <div class="right-footer-icon f-right">
+                <i class="fa fa-microphone" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+    <!-- /contenitore dx -->
+    </div>
+
+</div>
+
+<script type="module" src="js/main.js"></script>
 </body>
+
 </html>
