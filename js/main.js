@@ -42,7 +42,7 @@ createApp({
 		},
 
 		removeMessage(index) {
-			this.contact.message.splice(this.index, 1).message
+			this.activeContact.messages.splice(index, 1).message
 		}
 	},
 	computed: {
