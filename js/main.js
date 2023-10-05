@@ -9,7 +9,8 @@ createApp({
 			activeContact: {},
 			searchString: '',
 			contactFound: {},
-			newMessageString: ''
+			newMessageString: '',
+			
 		}
 	},
 	methods: {
@@ -43,6 +44,7 @@ createApp({
 
 		removeMessage(index) {
 			this.activeContact.messages.splice(index, 1).message
+			if(this.activeContact.messages.length === 0) this.activeContact.messages = ''
 		}
 	},
 	computed: {

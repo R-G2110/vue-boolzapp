@@ -336,6 +336,11 @@ body {
 .message .dropdown {
   float: right;
 }
+
+.message .dropdown-panel {
+  display: none;
+}
+
 .message:hover .dropdown-panel {
   display: block;
   cursor: pointer;
