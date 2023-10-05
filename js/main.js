@@ -8,7 +8,7 @@ createApp({
 			index: 0,
 			activeContact: {},
 			searchString: '',
-			contactFound: {},
+			contactFound: [],
 			newMessageString: '',
 			
 		}
@@ -49,13 +49,7 @@ createApp({
 	},
 	computed: {
 		resultQuery(){
-      if(this.searchString){
-      return this.contacts.filter((contact)=>{
-        return this.contactFound.toLowerCase().split(' ').every(contact => contacts.name.toLowerCase().includes(this.searchString))
-      })
-      }else{
-        return this.contactFound;
-      }
+			return this.contacts.filter(this.contact.toLowerCase().includes(this.searchString.toLowerCase()));
     }
 	},
 	created() {

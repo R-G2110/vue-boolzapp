@@ -50,36 +50,37 @@
             <input
               id="contacts-filter"
               v-model.trim="searchString"
-              @keyup="resultQuery"
               class="left-searchbar-input"
               placeholder="Cerca o inizia una nuova chat"
-            >
+              >
+              <!-- @keyup="resultQuery" -->
         </div>
 
         <!-- contacts -->
         <div class="contacts">
-            
+            <!-- Query result -->
             <div 
-                v-if="(searchString.length > 0)" 
-                :class="{'active': contact === activeContact}"
-                @click="activeContact = contact"
+                
+                v-for="contactF in contactFound"
+                :class="{'active': contactF === contactFound}"
+                @click="contactFound = contactF"
                 class="contact"
             >
                 <div class="contact-logo">
-                    <img :src="`${contactFound.avatar}`" :alt="contactFound.name">
+                    <img :src="`${contactF.avatar}`" :alt="contactF.name">
                 </div>
                 <div class="contact-info">
                     <h3>
-                        <span class="contact-name">{{contactFound.name}}</span>
-                        <span class="time f-right"></span>
+                        <span class="contact-name">{{contactF.name}}</span>
+                        <span class="time f-right">{{getLastDate(contactF)}}</span>
                     </h3>
-                    <small></small>
+                    <small>{{getLastMessage(contactF)}}</small>
                 
                 </div>
             </div>
+            <!-- /Query result -->
             <!-- contatto  -->
-           <div 
-                v-else
+           <!-- <div 
                 v-for="contact in contacts" 
                 :class="{'active': contact === activeContact}"
                 @click="activeContact = contact"
@@ -96,7 +97,7 @@
                     <small>{{getLastMessage(contact)}}</small>
                     
                 </div>
-            </div>
+            </div> -->
             <!-- /contatto  -->
 
         </div>
@@ -124,20 +125,21 @@
             <div class="right-messages">
             
                 <div 
+                   
                     v-for="(message, index) in activeContact.messages"
                     class="message"
                     :class="message.status"
                 >
-                    <div class="dropdown">
+                    <div class="dropdown dropdown-panel">
                         <span 
                          type="button" 
                          data-bs-toggle="dropdown"
-                         class="dropdown-panel"
+                         
                         >
                             <i class="fa-solid fa-chevron-down"></i>
                         </span>
                         <ul class="dropdown-menu">
-                            <li class="dropdown-item">Action</li>
+                            <li class="dropdown-item">This action doesn't work</li>
                             <li 
                                 class="dropdown-item"
                                 @click="removeMessage(index)"
