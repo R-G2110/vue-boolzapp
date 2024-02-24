@@ -35,22 +35,48 @@ createApp({
 		},
 
 		getLastMessage(contact){
-			return contact.messages.at(-1).message;
+			if(contact.messages.length > 0){
+				return contact.messages.at(-1).message;
+			}
+			return '';
 		},
 
 		getLastDate(contact){
-			return contact.messages.at(-1).date;
+			if(contact.messages.length > 0){
+				return contact.messages.at(-1).date;
+			}
+			return '';
 		},
 
 		removeMessage(index) {
 			this.activeContact.messages.splice(index, 1).message
 			if(this.activeContact.messages.length === 0) this.activeContact.messages = ''
+		},
+		// doSearch(){
+		// 	this.contacts.forEach(contact => {
+		// 		contact.name.toLowerCase().includes(this.searchString.toLowerCase())
+		// 	});
+		// }
+	},
+
+	watch:{
+		searchString(){
+			this.contacts.forEach(contact => {
+				contact.name.toLowerCase().includes(this.searchString.toLowerCase())
+			})
 		}
 	},
 	computed: {
 		resultQuery(){
-			return this.contacts.filter(this.contact.toLowerCase().includes(this.searchString.toLowerCase()));
-    }
+			return this.contacts.filter(contact => {
+				return contact.name.toLowerCase().includes(this.searchString.toLowerCase())
+			})
+    },
+		visibleContacts(){
+			return this.contacts.filter(contact => {
+				return contact.visible
+			})
+		}
 	},
 	created() {
 		this.activeContact = this.contacts[0]
